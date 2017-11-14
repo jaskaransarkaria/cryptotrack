@@ -14,10 +14,11 @@ soup = make_soup('https://news.google.com/news/search/section/q/bitcoin')
 bitcoin = soup.find_all("a", class_="nuEeue hzdq5d ME7ew", limit=10)
 time_ago = soup.find_all("span", class_="d5kXP YBZVLb", limit=10)
 
-for v in bitcoin:
+for v, i in zip(bitcoin, time_ago):
     anchor = v.string.strip()
     hyperlink = v.get("href")
-    for i in time_ago:
-        time_stamp = i.string.strip()
-    print(anchor + " ." + time_stamp + " ")
+    time_stamp = i.string.strip()
+    print(anchor + ". " + time_stamp + ".")
     print(hyperlink)
+
+#need to add timed running code
