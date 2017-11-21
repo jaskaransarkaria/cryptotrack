@@ -4,6 +4,7 @@
 import urllib
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
+from time import sleep
 
 def make_soup(url): #in order to parse the webpage for info
     the_page = urllib.request.urlopen(url)
@@ -23,14 +24,14 @@ def coin_info(coin):
         print(hyperlink)
 
 
-
-coin_info("bitcoin")
-print("\n")
-print("\n")
-print("\n")
-coin_info("ethereum")
-print("\n")
-print("\n")
-print("\n")
-coin_info("iota")
-#need to add timed running code
+while True:
+    coin_info("bitcoin")
+    print("\n")
+    print("\n")
+    print("\n")
+    coin_info("ethereum")
+    print("\n")
+    print("\n")
+    print("\n")
+    coin_info("iota")
+    sleep(3600) # wait 1 hour
