@@ -33,17 +33,25 @@ def coin_price(coin): # connect to api(coinmarketcap.com) and print info
 
 def coin_and_news():
     coin_price("bitcoin")
+    print("\n")
     coin_info("bitcoin")
     print("\n")
     print("\n")
     print("\n")
     coin_price("ethereum")
+    print("\n")
     coin_info("ethereum")
     print("\n")
     print("\n")
     print("\n")
     coin_price("iota")
+    print("\n")
     coin_info("iota")
+    print("\n")
+    print("\n")
+    print("\n")
+    print("\n")
+    print("\n")
 
 sched = BlockingScheduler()
 sched.add_job(coin_and_news, 'cron', hour='10-22', minute='0,15,30,45') # scheduled to run between the hours 10 and 10pm
