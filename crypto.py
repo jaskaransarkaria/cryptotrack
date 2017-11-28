@@ -1,12 +1,10 @@
 '''track cryptocurrencies on the stock markets'''
-# coinmarketcap.com
 import coinmarketcap
 from apscheduler.schedulers.blocking import BlockingScheduler
 import pandas as pd
 import urllib
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
-from time import sleep
 
 
 def make_soup(url): #in order to parse the webpage for info
@@ -26,14 +24,12 @@ def coin_info(coin): # parse the top ten news for each coin
         print(anchor + ". " + time_stamp + ".")
         print(hyperlink)
 
-def coin_price(coin): # connect to api and print infor
+def coin_price(coin): # connect to api(coinmarketcap.com) and print info
     market = coinmarketcap.Market()
     currency = market.ticker(coin)
     price_table = pd.Series((currency)[0]) #need to format and cut out unneeded data from this pandas
+    price_table = price_table.reindex(["name", "rank", "symbol", "price_usd", "price_btc", "percent_change_1h", "percent_change_24h", "percent_change_7d"])
     print(price_table)
-
-    #need to only collect "name", "rank", "price_usd", "percent_change_1hr", "percent_change_24hr"
-    # "percent_change_7d"
 
 def coin_and_news():
     coin_price("bitcoin")
@@ -50,5 +46,5 @@ def coin_and_news():
     coin_info("iota")
 
 sched = BlockingScheduler()
-sched.add_job(coin_and_news, 'cron', hour='10-22', minute='0,30') # scheduled to run between the hours 10 and 10pm
+sched.add_job(coin_and_news, 'cron', hour='10-22', minute='0,15,30,45') # scheduled to run between the hours 10 and 10pm
 sched.start()
