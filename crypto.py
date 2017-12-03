@@ -14,51 +14,70 @@ def make_soup(url): #in order to parse the webpage for info
 
 def coin_info(coin): # parse the top ten news for each coin
     coinsoup = make_soup('https://news.google.com/news/search/section/q/' + coin)
-    coin = coinsoup.find_all("a", class_="nuEeue hzdq5d ME7ew", limit=10)
-    time_ago = coinsoup.find_all("span", class_="d5kXP YBZVLb", limit=10)
-    total_news = ""
+    coin = coinsoup.find_all("a", class_="nuEeue hzdq5d ME7ew", limit=8)
+    time_ago = coinsoup.find_all("span", class_="d5kXP YBZVLb", limit=8)
+    total_news = "\n"
 
     for v, i in zip(coin, time_ago):#print coin and time tag simultaneously
         anchor = v.string.strip()
         hyperlink = v.get("href")
         time_stamp = i.string.strip()
-        news = '{}'.format(anchor) + '. ' + '{}'.format(time_stamp) + '.' + '\n' + '{}'.format(hyperlink)
-        return news
-        #total_news += news can't send over 1600 char limit per message re-examine this and split into multiple msgs
+        news = '{}'.format(anchor) + '. ' + '{}'.format(time_stamp) + '.' + '\n' + '{}'.format(hyperlink) + '\n'
 
-    #return total_newsnews
+        total_news += news #can't send over 1600 char limit per message re-examine this and split into multiple msgs
+
+    return total_news
 
 def coin_price(coin): # connect to api(coinmarketcap.com) and print info
     market = coinmarketcap.Market()
     currency = market.ticker(coin)
-    price_table = pd.Series((currency)[0]) #need to format and cut out unneeded data from this pandas
+    price_table = pd.Series((currency)[0])
+    #reindex to select particular info from pd.Series
     price_table = price_table.reindex(["name", "rank", "symbol", "price_usd", "price_btc",
                                        "percent_change_1h", "percent_change_24h", "percent_change_7d"])
     return price_table
 
 def coin_and_news():
     bit_price = coin_price("bitcoin")
-    bit_info = coin_info("bitcoin")
     eth_price = coin_price("ethereum")
-    eth_info = coin_info("ethereum")
     iota_price = coin_price("iota")
-    iota_info = coin_info("iota")
 
-    textable = '\n' + '{}'.format(bit_price) + '\n' + '{}'.format(bit_info) + '\n' + '\n' + '\n' + \
-               '{}'.format(eth_price) + '\n' + '{}'.format(eth_info) + '\n' + '\n' + '\n' +\
-               '{}'.format(iota_price) + '\n' + '{}'.format(iota_info) + '\n' + '\n' + '\n'
+    #string formation needed as twilio body req string
+    textable = '\n' + '{}'.format(bit_price) + '\n' + '\n' + '\n' + \
+               '{}'.format(eth_price) + '\n' + '\n' + '\n' +\
+               '{}'.format(iota_price) + '\n' + '\n' + '\n'
 
-    return textable
+    return textable #return > print when passing to another program
 
-def send_txt():
+def send_txt(body):
     account_sid = "AC856ab82823f898863429b9747c4fe9a2"
     auth_token = "aea6dc6c638f7941aa0172d97ecda2a5"
     client = Client(account_sid, auth_token)
     client.messages.create(
         to="+447816179261",
         from_="+441578930046",
-        body=coin_and_news())
+        body=body) # string req
+
+def send_coin():
+    price = send_txt(coin_and_news())
+    return price
+
+def send_bit_news():
+    bit_news = send_txt(coin_info("bitcoin"))
+    return bit_news
+
+def send_eth_news():
+    eth_news = send_txt(coin_info("ethereum"))
+    return eth_news
+
+def send_iota_news():
+    iota_news = send_txt(coin_info("iota"))
+    return iota_news
+
 
 sched = BlockingScheduler()
-sched.add_job(send_txt, 'cron', hour='10-22', minute='0,15,30,45')# scheduled to run between the hours 10 and 10pm
+sched.add_job(send_coin, 'cron', hour='10-22', minute='3,40')#scheduled to run between the hours 10 and 10pm
+sched.add_job(send_bit_news, 'cron', hour='10-22', minute='2,39')
+sched.add_job(send_eth_news, 'cron', hour='10-22', minute='1,38')
+sched.add_job(send_iota_news, 'cron', hour='10-22', minute='0,37')
 sched.start()
