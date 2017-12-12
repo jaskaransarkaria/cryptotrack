@@ -98,7 +98,7 @@ def send_email():
     send_it = email()
     return send_it
 
-send_email()
-#sched = BlockingScheduler()
-#sched.add_job(send_email, 'cron', hour='10-22', minute='0,30,15,45')
-#sched.start()
+
+sched = BlockingScheduler()
+sched.add_job(send_email, 'cron', hour='10-22', minute='0,30,15,45')
+sched.start()
