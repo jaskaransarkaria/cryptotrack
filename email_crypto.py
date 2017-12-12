@@ -6,6 +6,8 @@ import urllib
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 def make_soup(url): #in order to parse the webpage for info
     the_page = urllib.request.urlopen(url)
@@ -22,9 +24,11 @@ def coin_info(coin): # parse the top ten news for each coin
         anchor = v.string.strip()
         hyperlink = v.get("href")
         time_stamp = i.string.strip()
-        news = '{}'.format(anchor) + '. ' + '{}'.format(time_stamp) + '.' + '\n' + '{}'.format(hyperlink) + '\n'
+        news = '{}'.format(anchor) + '. ' + '{}'.format(time_stamp) + '.' + '\n' +\
+               '<a href="{}"></a>'.format(hyperlink) + '\n' # put in html hyperlink tags
 
-        total_news += news #can't send over 1600 char limit per message re-examine this and split into multiple msgs
+        total_news += news #can't send over 1600 char limit per text message re-examine this and
+        # split into multiple msgs (n/a for email)
 
     return total_news
 
@@ -66,9 +70,17 @@ def email():
     eth_info = coin_info("ethereum")
     iota_info = coin_info("iota")
 
+    all_info = """
+    {}
+    {}
+    {}""".format(bit_info, eth_info, iota_info) # is correct method of displaying with <a> tags
+
+    html = MIMEText(all_info, 'html') # not converting hyperlinks into readable links
+
     email_text = """
         {}
-        """.format(coin_stats)
+        {}
+        """.format(coin_stats, html)
 
     try:
         server = smtplib.SMTP_SSL('smtp.gmail.com', 465) #insecure connection created, protocol for mail submission uses 587
@@ -86,6 +98,7 @@ def send_email():
     send_it = email()
     return send_it
 
-sched = BlockingScheduler()
-sched.add_job(send_email, 'cron', hour='10-22', minute='0,30,15,45')
-sched.start()
+send_email()
+#sched = BlockingScheduler()
+#sched.add_job(send_email, 'cron', hour='10-22', minute='0,30,15,45')
+#sched.start()
