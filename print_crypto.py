@@ -5,7 +5,6 @@ import pandas as pd
 import urllib
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
-from twilio.rest import Client
 
 def make_soup(url): #in order to parse the webpage for info
     the_page = urllib.request.urlopen(url)
@@ -30,14 +29,14 @@ def coin_info(coin): # parse the top ten news for each coin
 
 def coin_price(coin): # connect to api(coinmarketcap.com) and print info
     market = coinmarketcap.Market()
-    currency = market.ticker(coin)
+    currency = market.ticker(coin)          # need to select GBP to display price also
     price_table = pd.Series((currency)[0])
     #reindex to select particular info from pd.Series
     price_table = price_table.reindex(["name", "rank", "symbol", "price_usd", "price_btc",
                                        "percent_change_1h", "percent_change_24h", "percent_change_7d"])
     return price_table
 
-def coin_and_news():
+def coin_and_news(): #actually just returns price
     bit_price = coin_price("bitcoin")
     eth_price = coin_price("ethereum")
     iota_price = coin_price("iota")
@@ -48,15 +47,6 @@ def coin_and_news():
                '{}'.format(iota_price) + '\n' + '\n' + '\n'
 
     return textable #return > print when passing to another program
-
-def send_txt(body):
-    account_sid = "AC856ab82823f898863429b9747c4fe9a2"
-    auth_token = "aea6dc6c638f7941aa0172d97ecda2a5"
-    client = Client(account_sid, auth_token)
-    client.messages.create(
-        to="+447816179261",
-        from_="+441578930046",
-        body=body) # string req
 
 def send_coin():
     price = print(coin_and_news())
@@ -76,8 +66,8 @@ def send_iota_news():
 
 
 sched = BlockingScheduler()
-sched.add_job(send_coin, 'cron', hour='10-22', minute='3,18,33,48')#scheduled to run between the hours 10 and 10pm
-#sched.add_job(send_bit_news, 'cron', hour='10-22', minute='2,17,32,47') #need to add seconds
-#sched.add_job(send_eth_news, 'cron', hour='10-22', minute='1,16,31,46')
-#sched.add_job(send_iota_news, 'cron', hour='10-22', minute='0,15,30,45')
+sched.add_job(send_coin, 'cron', hour='10-22', minute='2,33,18,48', second='30')#scheduled to run between the hours 10 and 10pm
+sched.add_job(send_bit_news, 'cron', hour='10-22', minute='2,32,17,47') #need to add seconds
+sched.add_job(send_eth_news, 'cron', hour='10-22', minute='0,30,15,45', second='30')
+sched.add_job(send_iota_news, 'cron', hour='10-22', minute='0,30,15,45')
 sched.start()
