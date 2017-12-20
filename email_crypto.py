@@ -6,9 +6,6 @@ import urllib
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import smtplib
-from email.message import EmailMessage
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 
 def make_soup(url): #in order to parse the webpage for i¬nfo
     the_page = urllib.request.urlopen(url)
@@ -63,8 +60,6 @@ def email():
     sent_from = 'everything.crypto.info@gmail.com'
     sent_to = ['jaskaran.sarkaria@googlemail.com']
 
-
-
     coin_stats = coin_and_news()
 
     bit_info = coin_info("bitcoin") #problem sending hyperlinks
@@ -74,36 +69,12 @@ def email():
     all_info = """
     {}
     {}
-    {}""".format(bit_info, eth_info, iota_info) # is correct method of displaying with <a> tags
-
-
-    '''html = MIMEText(all_info, _subtype='html')
-    html = html.replace_header('content-transfer-encoding', 'quoted-printable')
-    html= html.set_payload(all_info, 'html', 'utf-8')
-    msg.attach(html)
-
-    cs = charset.Charset('utf-8')
-    cs.header_encoding = charset.QP
-    cs.body_encoding = charset.QP
-    email_text.set_charset(cs)
-
-    msg = MIMEMultipart('alternative')
-    plain = MIMEText('Crypto currency information:'.encode('utf-8'), 'plain', 'UTF-8')
-    msg.attach(plain)
-    html = MIMEText(all_info.encode('utf-8'), 'html', 'UTF-8')
-    msg.attach(html)
-
-    '''
-
-    msg = EmailMessage()
-    msg.set_content(all_info.format(subtype='html'))
-    msg.add_alternative('')
+    {}""".format(bit_info, eth_info, iota_info)
 
     email_text = """
             {}
             {}
-            """.format(coin_stats, msg)
-
+            """.format(coin_stats, all_info).encode()
 
     try:
         server = smtplib.SMTP_SSL('smtp.gmail.com', 465) #insecure connection created, protocol for mail submission uses 587
@@ -121,7 +92,6 @@ def send_email():
     send_it = email()
     return send_it
 
-send_email()
-#sched = BlockingScheduler()
-#sched.add_job(send_email, 'cron', hour='10-22', minute='0,30,15,45')
-#sched.start()
+sched = BlockingScheduler()
+sched.add_job(send_email, 'cron', hour='10-22', minute='0,30')
+sched.start()
