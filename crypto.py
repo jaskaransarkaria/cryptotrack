@@ -76,8 +76,8 @@ def send_iota_news():
 
 
 sched = BlockingScheduler()
-sched.add_job(send_coin, 'cron', hour='10-22', minute='3,40')#scheduled to run between the hours 10 and 10pm
-sched.add_job(send_bit_news, 'cron', hour='10-22', minute='2,39')
-sched.add_job(send_eth_news, 'cron', hour='10-22', minute='1,38')
-sched.add_job(send_iota_news, 'cron', hour='10-22', minute='0,37')
+sched.add_job(send_coin, 'cron', hour='10-22', minute='3')#scheduled to run between the hours 10 and 10pm
+sched.add_job(send_bit_news, 'cron', hour='10-22', minute='2')
+sched.add_job(send_eth_news, 'cron', hour='10-22', minute='1')
+sched.add_job(send_iota_news, 'cron', hour='10-22', minute='0')
 sched.start()
