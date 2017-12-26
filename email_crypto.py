@@ -43,11 +43,13 @@ def coin_and_news(): #actually just returns price
     bit_price = coin_price("bitcoin")
     eth_price = coin_price("ethereum")
     iota_price = coin_price("iota")
+    ripple_price = coin_price("ripple")
 
     #string formation needed as twilio body req string
     textable = '\n' + '{}'.format(bit_price) + '\n' + '\n' + '\n' + \
                '{}'.format(eth_price) + '\n' + '\n' + '\n' +\
-               '{}'.format(iota_price) + '\n' + '\n' + '\n'
+               '{}'.format(iota_price) + '\n' + '\n' + '\n' +\
+               '{}'.format(ripple_price) + '\n' + '\n' + '\n'
 
     return textable #return > print when passing to another program
 
@@ -58,18 +60,20 @@ def email():
     gmail_pass = 'fuckyourich'
 
     sent_from = 'everything.crypto.info@gmail.com'
-    sent_to = ['jaskaran.sarkaria@googlemail.com']
+    sent_to = ['jaskaran.sarkaria@googlemail.com', 'simran.sarkaria@gmail.com']
 
     coin_stats = coin_and_news()
 
     bit_info = coin_info("bitcoin") #problem sending hyperlinks
     eth_info = coin_info("ethereum")
     iota_info = coin_info("iota")
+    ripple_info = coin_info("ripple")
 
-    all_info = """
+    all_info = """Crpto information
     {}
     {}
-    {}""".format(bit_info, eth_info, iota_info)
+    {}
+    {}""".format(bit_info, eth_info, iota_info, ripple_info)
 
     email_text = """
             {}
