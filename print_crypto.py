@@ -40,11 +40,14 @@ def coin_and_news(): #actually just returns price
     bit_price = coin_price("bitcoin")
     eth_price = coin_price("ethereum")
     iota_price = coin_price("iota")
+    ripple_price = coin_price("ripple")
 
     #string formation needed as twilio body req string
     textable = '\n' + '{}'.format(bit_price) + '\n' + '\n' + '\n' + \
                '{}'.format(eth_price) + '\n' + '\n' + '\n' +\
-               '{}'.format(iota_price) + '\n' + '\n' + '\n'
+               '{}'.format(iota_price) + '\n' + '\n' + '\n' +\
+               '{}'.format(ripple_price) + '\n' + '\n' + '\n'
+
 
     return textable #return > print when passing to another program
 
@@ -64,10 +67,14 @@ def send_iota_news():
     iota_news = print(coin_info("iota"))
     return iota_news
 
+def send_ripple_news():
+    ripple_news = print(coin_info("ripple"))
+    return ripple_news
 
 sched = BlockingScheduler()
 sched.add_job(send_coin, 'cron', hour='10-22', minute='2,33,18,48', second='30')#scheduled to run between the hours 10 and 10pm
 sched.add_job(send_bit_news, 'cron', hour='10-22', minute='2,32,17,47') #need to add seconds
 sched.add_job(send_eth_news, 'cron', hour='10-22', minute='0,30,15,45', second='30')
-sched.add_job(send_iota_news, 'cron', hour='10-22', minute='0,30,15,45')
+sched.add_job(send_iota_news, 'cron', hour='10-22', minute='0,30,15,45', second='15')
+sched.add_job(send_ripple_news, 'cron', hour='10-22', minute='0,30,15,45')
 sched.start()
