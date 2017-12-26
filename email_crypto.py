@@ -60,7 +60,8 @@ def email():
     gmail_pass = 'fuckyourich'
 
     sent_from = 'everything.crypto.info@gmail.com'
-    sent_to = ['jaskaran.sarkaria@googlemail.com', 'simran.sarkaria@gmail.com']
+    sent_to = ['jaskaran.sarkaria@googlemail.com', 'simran.sarkaria@gmail.com', 'rav.singh.mann@gmail.com',
+               'sarkaria.p@gmail.com']
 
     coin_stats = coin_and_news()
 
@@ -69,10 +70,15 @@ def email():
     iota_info = coin_info("iota")
     ripple_info = coin_info("ripple")
 
-    all_info = """Crpto information
+    all_info = """Crypto information
+
+    Bitcoin information
     {}
+    Ehtereum information
     {}
+    Iota information
     {}
+    Ripple information
     {}""".format(bit_info, eth_info, iota_info, ripple_info)
 
     email_text = """
@@ -97,5 +103,5 @@ def send_email():
     return send_it
 
 sched = BlockingScheduler()
-sched.add_job(send_email, 'cron', hour='10-22', minute='0,30')
+sched.add_job(send_email, 'cron', hour='10-22', minute='0')
 sched.start()
