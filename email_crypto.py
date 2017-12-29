@@ -70,7 +70,7 @@ def email():
     iota_info = coin_info("iota")
     ripple_info = coin_info("ripple")
 
-    all_info = """Crypto information
+    all_info = """SUBJECT: Crypto Update \n\n
 
     Bitcoin information
     {}
