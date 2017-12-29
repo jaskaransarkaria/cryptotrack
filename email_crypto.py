@@ -79,7 +79,7 @@ def email():
     Iota information
     {}
     Ripple information
-    {}""".format(bit_info, eth_info, iota_info, ripple_info)
+    {}""".format(bit_info, eth_info, iota_info, ripple_info) # add a date and time to Subject?
 
     email_text = """
             {}
