@@ -70,8 +70,7 @@ def email():
     iota_info = coin_info("iota")
     ripple_info = coin_info("ripple")
 
-    all_info = """SUBJECT: Crypto Update \n\n
-
+    all_info = """
     Bitcoin information
     {}
     Ehtereum information
@@ -81,7 +80,7 @@ def email():
     Ripple information
     {}""".format(bit_info, eth_info, iota_info, ripple_info) # add a date and time to Subject?
 
-    email_text = """
+    email_text = """SUBJECT: Crypto Update \n\n
             {}
             {}
             """.format(coin_stats, all_info).encode()
