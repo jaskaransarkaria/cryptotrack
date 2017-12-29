@@ -80,7 +80,7 @@ def email():
     Ripple information
     {}""".format(bit_info, eth_info, iota_info, ripple_info) # add a date and time to Subject?
 
-    email_text = """SUBJECT: Crypto Update \n\n
+    email_text = """From: "Jasky Crypto" <everything.crypto.info@gmail.com>\nSubject: Crypto Update \n\n
             {}
             {}
             """.format(coin_stats, all_info).encode()
