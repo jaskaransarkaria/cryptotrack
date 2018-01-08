@@ -71,6 +71,12 @@ def send_ripple_news():
     ripple_news = print(coin_info("ripple"))
     return ripple_news
 
+send_coin
+send_bit_news
+send_eth_news
+send_iota_news
+send_ripple_news
+
 sched = BlockingScheduler()
 sched.add_job(send_coin, 'cron', hour='10-22', minute='2,33,18,48', second='30')#scheduled to run between the hours 10 and 10pm
 sched.add_job(send_bit_news, 'cron', hour='10-22', minute='2,32,17,47') #need to add seconds
