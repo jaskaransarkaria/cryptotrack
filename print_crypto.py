@@ -5,6 +5,7 @@ import pandas as pd
 import urllib
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
+from datetime import datetime
 
 def make_soup(url): #in order to parse the webpage for info
     the_page = urllib.request.urlopen(url)
@@ -41,12 +42,16 @@ def coin_and_news(): #actually just returns price
     eth_price = coin_price("ethereum")
     iota_price = coin_price("iota")
     ripple_price = coin_price("ripple")
+    monero_price = coin_price("monero")
+    steem_price = coin_price("steem")
 
     #string formation needed as twilio body req string
     textable = '\n' + '{}'.format(bit_price) + '\n' + '\n' + '\n' + \
                '{}'.format(eth_price) + '\n' + '\n' + '\n' +\
                '{}'.format(iota_price) + '\n' + '\n' + '\n' +\
-               '{}'.format(ripple_price) + '\n' + '\n' + '\n'
+               '{}'.format(ripple_price) + '\n' + '\n' + '\n' +\
+               '{}'.format(monero_price) + '\n' + '\n' + '\n' +\
+               '{}'.format(steem_price) + '\n' + '\n' + '\n'
 
 
     return textable #return > print when passing to another program
@@ -71,16 +76,33 @@ def send_ripple_news():
     ripple_news = print(coin_info("ripple"))
     return ripple_news
 
+def send_monero_news():
+    monero_news = print(coin_info("monero"))
+    return monero_news
+
+def send_steem_news():
+    steem_news = print(coin_info("steem"))
+    return steem_news
+
+def time():
+    print(datetime.now())
+
+time()
 send_coin()
 send_bit_news()
 send_eth_news()
 send_iota_news()
 send_ripple_news()
+send_monero_news()
+send_steem_news()
 
 sched = BlockingScheduler()
+sched.add_job(time, 'cron', hour='10-22', minute='2,33,18,48', second='31')
 sched.add_job(send_coin, 'cron', hour='10-22', minute='2,33,18,48', second='30')#scheduled to run between the hours 10 and 10pm
 sched.add_job(send_bit_news, 'cron', hour='10-22', minute='2,32,17,47') #need to add seconds
 sched.add_job(send_eth_news, 'cron', hour='10-22', minute='0,30,15,45', second='30')
 sched.add_job(send_iota_news, 'cron', hour='10-22', minute='0,30,15,45', second='15')
+sched.add_job(send_monero_news, 'cron', hour='10-22', minute='0,30,15,45', second='10')
+sched.add_job(send_steem_news, 'cron', hour='10-22', minute='0,30,15,45', second='5')
 sched.add_job(send_ripple_news, 'cron', hour='10-22', minute='0,30,15,45')
 sched.start()
