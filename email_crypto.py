@@ -56,13 +56,10 @@ def coin_and_news(): #actually just returns price
 
 def email():
 
-    gmail_user = 'everything.crypto.info@gmail.com'
-    gmail_pass = 'fuckyourich'
-
-    sent_from = 'everything.crypto.info@gmail.com'
-    sent_to = ['jaskaran.sarkaria@googlemail.com', 'simran.sarkaria@gmail.com', 'rav.singh.mann@gmail.com',
-               'sarkaria.p@gmail.com']
-
+    gmail_user = 
+    gmail_pass = 
+    sent_from = 
+    sent_to = 
     coin_stats = coin_and_news()
 
     bit_info = coin_info("bitcoin") #problem sending hyperlinks
