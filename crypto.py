@@ -50,12 +50,12 @@ def coin_and_news():
     return textable #return > print when passing to another program
 
 def send_txt(body):
-    account_sid = "AC856ab82823f898863429b9747c4fe9a2"
-    auth_token = "aea6dc6c638f7941aa0172d97ecda2a5"
+    account_sid = 
+    auth_token = 
     client = Client(account_sid, auth_token)
     client.messages.create(
-        to="+447816179261",
-        from_="+441578930046",
+        to=
+        from_="
         body=body) # string req
 
 def send_coin():
